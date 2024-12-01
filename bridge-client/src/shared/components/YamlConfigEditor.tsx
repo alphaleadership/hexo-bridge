@@ -10,16 +10,22 @@ import { StreamLanguage } from "@codemirror/language";
 import { linter, Diagnostic, lintGutter } from "@codemirror/lint";
 import { yaml } from "@codemirror/legacy-modes/mode/yaml";
 import { UserPreferencesContext } from "../userPreferencesContext";
+import jsYaml, { YAMLException } from "js-yaml";
 
 type YamlConfigEditorProps = {
   getContentConfig: AxiosRequestConfig;
   saveContentConfig: AxiosRequestConfig;
 };
 
-const yamlValidation: AxiosRequestConfig = {
-  method: "POST",
-  url: "settings/validateYaml",
-};
+function validateYaml(content: string) {
+  try {
+    jsYaml.load(content);
+    return [];
+  } catch (error) {
+    console.error("YAML validation error.", error);
+    return [error as YAMLException];
+  }
+}
 
 export default function YamlConfigEditor(props: YamlConfigEditorProps) {
   const userPreferences = useContext(UserPreferencesContext);
@@ -41,28 +47,18 @@ export default function YamlConfigEditor(props: YamlConfigEditorProps) {
     setConfig(configData.config);
   }, [configData]);
 
-  //Setup yaml verification
-  const { execute: verifyYaml } = useAPI(
-    {
-      ...yamlValidation,
-      data: {
-        config: config,
-      },
-    },
-    true
-  );
-
   const [errorMarker, setErrorMarker] = useState<Diagnostic>();
+
   useEffect(() => {
     const validate = async () => {
-      const res = await verifyYaml();
-      if (res && res.data.error.length === 0) {
+      const validationResult = validateYaml(config);
+      if (validationResult && validationResult.length === 0) {
         setErrorMarker(undefined);
       } else {
         setErrorMarker({
-          from: res!.data.error.mark.position,
-          to: config.indexOf(" ", res!.data.error.mark.position),
-          message: res!.data.error.message,
+          from: validationResult[0].mark.position,
+          to: config.indexOf(" ", validationResult[0].mark.position),
+          message: validationResult[0].message,
           severity: "error",
         });
       }

@@ -3,7 +3,6 @@ const path = require("path");
 let hexo = null;
 let HEXO_CONFIG_PATH = null;
 let BRIDGE_CONFIG_PATH = null;
-const YAWN = require("yawn-yaml").default;
 
 function setup(hexoInstance) {
   hexo = hexoInstance;
@@ -38,19 +37,6 @@ function saveBridgeConfig(newConfig) {
   return saveFile(BRIDGE_CONFIG_PATH, newConfig);
 }
 
-function validateYaml(content) {
-  try {
-    new YAWN(content).toJSON();
-    return {
-      error: [],
-    };
-  } catch (error) {
-    return {
-      error: error,
-    };
-  }
-}
-
 function getBridgeConfig() {
   const config = fs.readFileSync(BRIDGE_CONFIG_PATH);
   return {
@@ -75,5 +61,4 @@ module.exports = {
   getBridgeConfig: getBridgeConfig,
   getBridgeConfigAsJson: getBridgeConfigAsJson,
   saveBridgeConfig: saveBridgeConfig,
-  validate: validateYaml,
 };

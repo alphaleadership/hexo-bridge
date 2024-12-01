@@ -312,10 +312,6 @@ hexo.extend.filter.register("server_middleware", (app) => {
     }
   });
 
-  app.use(hexo.config.root + "api/settings/validateYaml", function (req, res) {
-    res.sendSuccess(settings.validate(req.body.config));
-  });
-
   //API:PLUGINS
   app.use(hexo.config.root + "api/plugins/getAll", function (req, res) {
     res.sendSuccess(plugins.getAll());
