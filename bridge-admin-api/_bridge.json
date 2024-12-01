@@ -1,0 +1,9 @@
+{
+  "editorFontSize": 14,
+  "editorDarkMode": false,
+  "post_list_itemsPerPage": 7,
+  "post_list_showCategories": true,
+  "post_list_showTags": true,
+  "page_list_itemsPerPage": 7,
+  "content_fetch_timeout": 200
+}

@@ -8,75 +8,10 @@ const YAWN = require("yawn-yaml").default;
 function setup(hexoInstance) {
   hexo = hexoInstance;
   HEXO_CONFIG_PATH = hexo.config_path;
-  BRIDGE_CONFIG_PATH = path.join(hexo.base_dir, "_bridge.yml");
+  BRIDGE_CONFIG_PATH = path.join(hexo.base_dir, "_bridge.json");
   if (!fs.existsSync(BRIDGE_CONFIG_PATH)) {
     resetBridgeConfig();
   }
-  const config = new YAWN(fs.readFileSync(BRIDGE_CONFIG_PATH)).toJSON();
-  //Check if the config is valid
-  let configTemplate = `# Font size for the code editor. The default is 14.
-  editorFontSize: 14
-  editorDarkMode: false
-  # All posts page.
-  post_list_itemsPerPage: 7
-  post_list_showCategories: true
-  post_list_showTags: true
-  # All pages page.
-  page_list_itemsPerPage: 7
-  # When new posts, pages, etc, are created, hexo needs to update its database before bridge is allowed to display the editor.
-  # This config controls the waiting time before attempting to fetch the newly created content.
-  content_fetch_timeout: 200 # Time is in milliseconds
-`;
-  let newConfig = new YAWN(configTemplate);
-  //Editor config
-  if (config.editorFontSize) {
-    newConfig.json = {
-      ...newConfig.json,
-      editorFontSize: config.editorFontSize,
-    };
-  }
-  if (config.editorDarkMode) {
-    newConfig.json = {
-      ...newConfig.json,
-      editorDarkMode: config.editorDarkMode,
-    };
-  }
-  //Post list config
-  if (config.post_list_itemsPerPage) {
-    newConfig.json = {
-      ...newConfig.json,
-      post_list_itemsPerPage: config.post_list_itemsPerPage,
-    };
-  }
-  if (config.post_list_showCategories) {
-    newConfig.json = {
-      ...newConfig.json,
-      post_list_showCategories: config.post_list_showCategories,
-    };
-  }
-  if (config.post_list_showTags) {
-    newConfig.json = {
-      ...newConfig.json,
-      post_list_showTags: config.post_list_showTags,
-    };
-  }
-  //Page list config
-  if (config.page_list_itemsPerPage) {
-    newConfig.json = {
-      ...newConfig.json,
-      ...newConfig.json,
-      page_list_itemsPerPage: config.page_list_itemsPerPage,
-    };
-  }
-  //Content fetch timeout
-  if (config.content_fetch_timeout) {
-    newConfig.json = {
-      ...newConfig.json,
-      ...newConfig.json,
-      content_fetch_timeout: config.content_fetch_timeout,
-    };
-  }
-  saveBridgeConfig(newConfig.yaml);
 }
 
 function saveFile(file, content) {
@@ -84,7 +19,7 @@ function saveFile(file, content) {
 }
 
 function resetBridgeConfig() {
-  saveFile(BRIDGE_CONFIG_PATH, fs.readFileSync(path.join(__dirname, "_bridge.yml")));
+  saveFile(BRIDGE_CONFIG_PATH, fs.readFileSync(path.join(__dirname, "_bridge.json")));
 }
 
 function getHexoConfig() {
@@ -126,10 +61,10 @@ function getBridgeConfig() {
 
 function getBridgeConfigAsJson() {
   try {
-    return new YAWN(fs.readFileSync(BRIDGE_CONFIG_PATH)).toJSON();
+    return fs.readFileSync(BRIDGE_CONFIG_PATH);
   } catch (error) {
     resetBridgeConfig();
-    return new YAWN(fs.readFileSync(path.join(__dirname, "_bridge.yml"))).toJSON();
+    return new fs.readFileSync(path.join(__dirname, "_bridge.json"));
   }
 }
 
