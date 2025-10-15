@@ -1,0 +1,42 @@
+name: Update npm dependencies
+
+on:
+  schedule:
+    - cron: '0 3 * * 1' # Chaque lundi à 03h00 UTC
+  workflow_dispatch: # Permet de lancer manuellement
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Update dependencies
+        run: npm update
+
+      - name: Commit updated dependencies
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -b update-npm-dependencies
+          git add package-lock.json
+          git commit -m 'chore: update npm dependencies'
+          git push origin update-npm-dependencies
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: 'chore: update npm dependencies'
+          body: 'Automated update of npm dependencies via GitHub Actions.'
+          branch: update-npm-dependencies
+          labels: dependencies, automated
