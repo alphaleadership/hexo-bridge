@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Update dependencies
-        run: npm update
+        run: npm update && npm outdated
 
       - name: Commit updated dependencies
         run: |
