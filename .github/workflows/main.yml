@@ -26,17 +26,19 @@ jobs:
 
       - name: Commit updated dependencies
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git checkout -b update-npm-dependencies
-          git add package-lock.json
-          git commit -m 'chore: update npm dependencies'
-          git push origin update-npm-dependencies
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+            git checkout -b update-npm-dependencies-${{ github.run_id }}
+            git add package-lock.json
+            git commit -m 'chore: update npm dependencies'
+            git push origin update-npm-dependencies-${{ github.run_id }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          title: 'chore: update npm dependencies'
-          body: 'Automated update of npm dependencies via GitHub Actions.'
-          branch: update-npm-dependencies
-          labels: dependencies, automated
+           title: 'chore: update npm dependencies'
+           body: 'Automated update of npm dependencies via GitHub Actions.'
+           branch: update-npm-dependencies-${{ github.run_id }}
+           base: main
+           labels: dependencies, automated
+
