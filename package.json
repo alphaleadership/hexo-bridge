@@ -24,12 +24,12 @@
   },
   "license": "GPL-3.0-only",
   "dependencies": {
-    "axios": "^0.26.0",
-    "body-parser": "^1.19.0",
-    "formidable": "^2.0.1",
-    "hexo-front-matter": "^3.0.0",
-    "hexo-fs": "^3.1.0",
-    "yawn-yaml": "^1.5.0",
+    "axios": "^1.12.2",
+    "body-parser": "^2.2.0",
+    "formidable": "^3.5.4",
+    "hexo-front-matter": "^4.2.1",
+    "hexo-fs": "5.0.0",
+    "yawn-yaml": "^2.3.0",
     "serve-static": "^1.14.1",
     "cheerio": "^1.0.0-rc.12"
   }
