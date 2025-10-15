@@ -37,7 +37,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
            title: 'chore: update npm dependencies'
-           body: 'Automated update of npm dependencies via GitHub Actions.'
+           body: '/gemini review'
            branch: update-npm-dependencies-${{ github.run_id }}
            base: main
            labels: dependencies, automated
